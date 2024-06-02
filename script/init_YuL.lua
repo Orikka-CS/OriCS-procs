@@ -5,10 +5,11 @@ YuL={}
 --constants
 CATEGORY_SEARCH_CARD=CATEGORY_SEARCH+CATEGORY_TOHAND
 
-CARD_LAVA_GOLEM		=102380
-CARD_RAINBOW_FISH	=23771716
-CARD_FISH_N_KICKS	=32703716
-CARD_FISH_N_BACKS	=21507589
+CARD_LAVA_GOLEM		=102380		--용암 마신 라바 골렘
+CARD_RAINBOW_FISH	=23771716	--레인보우 휘시
+CARD_FISH_N_KICKS	=32703716	--피쉬 앤 킥스
+CARD_FISH_N_BACKS	=21507589	--피쉬 앤 백스
+CARD_PESTILENCE		=62472614	--역병
 
 EFFECT_CHANGE_SUMMON_TYPE	=99970548
 EFFECT_ADD_SUMMON_TYPE		=99970549
@@ -73,6 +74,75 @@ RegEff.scref(96457619,1,function(e,c)
 		return c:IsType(TYPE_XYZ) and c:GetOverlayCount()~=0
 	end)
 end)
+
+--역병
+function YuL.PestilenceFilter(c,e,tp)
+	return c:IsFaceup()
+		and (Duel.IsPlayerAffectedByEffect(tp,99970896)~=nil or c:IsRace(RACE_WARRIOR+RACE_SPELLCASTER+RACE_BEASTWARRIOR))
+end
+local PestilenceTable = {
+	[0]=function(e,c)
+	local target = function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+		if chkc then return chkc:IsLocation(LOCATION_MZONE) and YuL.PestilenceFilter(chkc,e,tp) end
+		if chk==0 then return Duel.IsExistingTarget(YuL.PestilenceFilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,e,tp) end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
+		Duel.SelectTarget(tp,YuL.PestilenceFilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,e,tp)
+		Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
+		local e3=Effect.CreateEffect(e:GetHandler())
+		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e3:SetCode(EVENT_CHAIN_SOLVING)
+		e3:SetReset(RESET_CHAIN)
+		e3:SetLabel(Duel.GetCurrentChain())
+		e3:SetLabelObject(e)
+		e3:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+			if re~=e:GetLabelObject() then return end
+			local c=e:GetHandler()
+			local tc=Duel.GetChainInfo(Duel.GetCurrentChain(),CHAININFO_TARGET_CARDS):GetFirst()
+			if tc and c:IsRelateToEffect(re) and tc:IsRelateToEffect(re) and tc:IsFaceup() then
+				Duel.Equip(tp,c,tc)
+			end
+		end)
+		Duel.RegisterEffect(e3,tp)
+		Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
+	end
+	e:SetTarget(target)
+	end
+	,
+	[1]=function(e,c)
+	e:SetValue(function(e,c) return YuL.PestilenceFilter(c,e,e:GetHandlerPlayer()) end) end
+}
+RegEff.scref(CARD_PESTILENCE,0,PestilenceTable[0])
+RegEff.scref(CARD_PESTILENCE,1,PestilenceTable[1])
+
+--세로열 그룹
+function YuL.SelectColumnGroupFilter(c,num,tp)
+	local seq=c:GetSequence()
+	local p=c:GetControler()
+	if p==tp then
+		if seq==5 and c:IsLocation(LOCATION_MZONE) then seq=1
+		elseif seq==6 and c:IsLocation(LOCATION_MZONE) then seq=3 end
+		return (seq<5 and seq==num)
+	else
+		if seq==5 and c:IsLocation(LOCATION_MZONE) then seq=3
+		elseif seq==6 and c:IsLocation(LOCATION_MZONE) then seq=1 end
+		return (seq<5 and seq==math.abs(4-num))
+	end
+	return false
+end
+function YuL.SelectColumnGroup(tp,...)
+	local t={...}
+	local g=Group.CreateGroup()
+	local fg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	for i,v in ipairs(t) do
+		if v>=0 and v<=4 then
+			g:Merge(fg:Filter(YuL.SelectColumnGroupFilter,nil,v,tp))
+		end
+	end
+	return g
+end
+function YuL.IsColumn(c,tp,...)
+	return YuL.SelectColumnGroup(tp,...):IsContains(c)
+end
 
 --이 턴에 발동된
 function YuL.SetActivateTurn()
