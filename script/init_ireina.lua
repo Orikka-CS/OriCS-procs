@@ -272,6 +272,496 @@ function Duel.RegisterEffect(e,...)
 			end)
 		end
 	end
+endfunction Auxiliary.RegisterIdealMatter(c,code)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_ADJUST)
+	e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+		for tc in aux.Next(g) do
+			local p1=tc:GetControler()
+			local p2=tc:GetReasonPlayer()
+			if p1==p2 then
+				if tc:GetOriginalCodeRule()==code then
+					local e1=Effect.CreateEffect(c)
+					e1:SetType(EFFECT_TYPE_FIELD)
+					e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+					e1:SetCode(EFFECT_FORBIDDEN)
+					e1:SetTargetRange(0x7f,0)
+					e1:SetTarget(function(e,c)
+						return not c:IsSetCard("이상물질(아이딜 매터)")
+					end)
+					Duel.RegisterEffect(e1,p1)
+				elseif not tc:IsSetCard("이상물질(아이딜 매터)") then
+					local e1=Effect.CreateEffect(c)
+					e1:SetType(EFFECT_TYPE_FIELD)
+					e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+					e1:SetCode(EFFECT_FORBIDDEN)
+					e1:SetTargetRange(0x7f,0)
+					e1:SetTarget(function(e,c)
+						return c:GetOriginalCodeRule()==code
+					end)
+					Duel.RegisterEffect(e1,p1)
+				end
+			end
+		end
+	end)
+	Duel.RegisterEffect(e1,0)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_CHAINING)
+	e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		local rc=re:GetHandler()
+		if rc:GetOriginalCodeRule()==code then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+			e1:SetCode(EFFECT_FORBIDDEN)
+			e1:SetTargetRange(0x7f,0)
+			e1:SetTarget(function(e,c)
+				return not c:IsSetCard("이상물질(아이딜 매터)")
+			end)
+			Duel.RegisterEffect(e1,rp)
+		elseif not rc:IsSetCard("이상물질(아이딜 매터)") then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+			e1:SetCode(EFFECT_FORBIDDEN)
+			e1:SetTargetRange(0x7f,0)
+			e1:SetTarget(function(e,c)
+				return c:GetOriginalCodeRule()==code
+			end)
+			Duel.RegisterEffect(e1,rp)
+		end
+	end)
+	Duel.RegisterEffect(e1,0)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		local ac=Duel.GetAttacker()
+		local turnp=Duel.GetTurnPlayer()
+		if ac:GetOriginalCodeRule()==code then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+			e1:SetCode(EFFECT_FORBIDDEN)
+			e1:SetTargetRange(0x7f,0)
+			e1:SetTarget(function(e,c)
+				return not c:IsSetCard("이상물질(아이딜 매터)")
+			end)
+			Duel.RegisterEffect(e1,turnp)
+		elseif not ac:IsSetCard("이상물질(아이딜 매터)") then
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+			e1:SetCode(EFFECT_FORBIDDEN)
+			e1:SetTargetRange(0x7f,0)
+			e1:SetTarget(function(e,c)
+				return c:GetOriginalCodeRule()==code
+			end)
+			Duel.RegisterEffect(e1,turnp)
+		end
+	end)
+	Duel.RegisterEffect(e1,0)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_BE_MATERIAL)
+	e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		for tc in aux.Next(eg) do
+			local p1=tc:GetControler()
+			local p2=tc:GetReasonPlayer()
+			if p1==p2 then
+				if tc:GetOriginalCodeRule()==code then
+					local e1=Effect.CreateEffect(c)
+					e1:SetType(EFFECT_TYPE_FIELD)
+					e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+					e1:SetCode(EFFECT_FORBIDDEN)
+					e1:SetTargetRange(0x7f,0)
+					e1:SetTarget(function(e,c)
+						return not c:IsSetCard("이상물질(아이딜 매터)")
+					end)
+					Duel.RegisterEffect(e1,p1)
+				elseif not tc:IsSetCard("이상물질(아이딜 매터)") then
+					local e1=Effect.CreateEffect(c)
+					e1:SetType(EFFECT_TYPE_FIELD)
+					e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+					e1:SetCode(EFFECT_FORBIDDEN)
+					e1:SetTargetRange(0x7f,0)
+					e1:SetTarget(function(e,c)
+						return c:GetOriginalCodeRule()==code
+					end)
+					Duel.RegisterEffect(e1,p1)
+				end
+			end
+		end
+	end)
+	Duel.RegisterEffect(e1,0)
+	local e2=e1:Clone()
+	e2:SetCode(EVENT_CHANGE_POS)
+	Duel.RegisterEffect(e2,0)
+end
+
+EVENT_IDOL=18453981
+EFFECT_IDOL=18453981
+GlobalIdolCost={}
+GlobalEverExists={}
+GlobalIdolStacked={}
+GlobalIdolResult=nil
+
+function Auxiliary.GlobalEverExistCheck()
+	local e1=Effect.GlobalEffect()
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_ADJUST)
+	e1:SetOperation(function()
+		local g=Duel.GetMatchingGroup(aux.TRUE,0,0xff,0xff,nil)
+		for tc in aux.Next(g) do
+			if not GlobalEverExists[tc] then
+				GlobalEverExists[tc]=true
+			end
+		end
+	end)
+	Duel.RegisterEffect(e1,0)
+end
+
+Auxiliary.GlobalEverExistCheck()
+
+local cregeff=Card.RegisterEffect
+function Card.RegisterEffect(c,e,...)
+	cregeff(c,e,...)
+	if e:IsHasType(EFFECT_TYPE_CONTINUOUS) then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			return not GlobalIdolStacked[e] and (not con or con(e,tp,eg,ep,ev,re,r,rp))
+		end)
+		local op=e:GetOperation()
+		e:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+			if not e then
+				return
+			end
+			if GlobalIdolCost[e] and GlobalIdolCost[e](e,tp,eg,ep,ev,re,r,rp,0) then
+				GlobalIdolCost[e](e,tp,eg,ep,ev,re,r,rp,1)
+			end
+			GlobalIdolStacked[e]=true
+			--not fully implemented
+			local g=Group.CreateGroup()
+			for tc,_ in pairs(GlobalEverExists) do
+				local te=tc:IsHasEffect(EFFECT_IDOL)
+				if te and not GlobalIdolStacked[te:GetLabelObject()]
+					and (tc:IsControler(1-tp) or (tc:IsControler(PLAYER_NONE) and tc:GetOwner()==1-tp)) then
+					g:AddCard(tc)
+				end
+			end
+			local sg=g:Select(1-tp,0,1,nil)
+			if sg and #sg>0 then
+				Duel.RaiseSingleEvent(sg:GetFirst(),EVENT_IDOL,e,REASON_EFFECT,tp,tp,0)
+			else
+				local g=Group.CreateGroup()
+				for tc,_ in pairs(GlobalEverExists) do
+					local te=tc:IsHasEffect(EFFECT_IDOL)
+					if te and not GlobalIdolStacked[te:GetLabelObject()]
+						and (tc:IsControler(tp) or (tc:IsControler(PLAYER_NONE) and tc:GetOwner()==tp)) then
+						g:AddCard(tc)
+					end
+				end
+				local sg=g:Select(tp,0,1,nil)
+				if sg and #sg>0 then
+					Duel.RaiseSingleEvent(sg:GetFirst(),EVENT_IDOL,e,REASON_EFFECT,tp,tp,0)
+				end
+			end
+			GlobalIdolStacked[e]=nil
+			if not GlobalIdolResult and op then
+				op(e,tp,eg,ep,ev,re,r,rp)
+			end
+			GlobalIdolResult=nil
+		end)
+	end
+end
+local dregeff=Duel.RegisterEffect
+function Duel.RegisterEffect(e,...)
+	dregeff(e,...)
+	if e:IsHasType(EFFECT_TYPE_CONTINUOUS) and not e:IsHasProperty(EFFECT_FLAG_INITIAL) then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			return not GlobalIdolStacked[e] and (not con or con(e,tp,eg,ep,ev,re,r,rp))
+		end)
+		local op=e:GetOperation()
+		e:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+			if not e then
+				return
+			end
+			if GlobalIdolCost[e] and GlobalIdolCost[e](e,tp,eg,ep,ev,re,r,rp,0) then
+				GlobalIdolCost[e](e,tp,eg,ep,ev,re,r,rp,1)
+			end
+			GlobalIdolStacked[e]=true
+			--not fully implemented
+			local g=Group.CreateGroup()
+			for tc,_ in pairs(GlobalEverExists) do
+				local te=tc:IsHasEffect(EFFECT_IDOL)
+				if te and not GlobalIdolStacked[te:GetLabelObject()]
+					and (tc:IsControler(1-tp) or (tc:IsControler(PLAYER_NONE) and tc:GetOwner()==1-tp)) then
+					g:AddCard(tc)
+				end
+			end
+			local sg=g:Select(1-tp,0,1,nil)
+			if sg and #sg>0 then
+				Duel.RaiseSingleEvent(sg:GetFirst(),EVENT_IDOL,e,REASON_EFFECT,tp,tp,0)
+			else
+				local g=Group.CreateGroup()
+				for tc,_ in pairs(GlobalEverExists) do
+					local te=tc:IsHasEffect(EFFECT_IDOL)
+					if te and not GlobalIdolStacked[te:GetLabelObject()]
+						and (tc:IsControler(tp) or (tc:IsControler(PLAYER_NONE) and tc:GetOwner()==tp)) then
+						g:AddCard(tc)
+					end
+				end
+				local sg=g:Select(tp,0,1,nil)
+				if sg and #sg>0 then
+					Duel.RaiseSingleEvent(sg:GetFirst(),EVENT_IDOL,e,REASON_EFFECT,tp,tp,0)
+				end
+			end
+			GlobalIdolStacked[e]=nil
+			if not GlobalIdolResult and op then
+				op(e,tp,eg,ep,ev,re,r,rp)
+			end
+			GlobalIdolResult=nil
+		end)
+	end
+end
+
+local cregeff=Card.RegisterEffect
+function Card.RegisterEffect(c,e,forced,...)
+	cregeff(c,e,forced,...)
+	local code=c:GetOriginalCode()
+	if code~=18454019 or not e:IsHasProperty(EFFECT_FLAG_INITIAL) then
+		if e:GetCode()==EFFECT_CANNOT_BE_EFFECT_TARGET then
+			local con=e:GetCondition()
+			e:SetCondition(function(e,...)
+				local tp=e:GetHandlerPlayer()
+				if Duel.GetPlayerEffect(tp,18454016) then
+					return false
+				end
+				return not con or con(e,...)
+			end)
+		end
+		if e:GetCode()==EFFECT_INDESTRUCTABLE_EFFECT then
+			local con=e:GetCondition()
+			e:SetCondition(function(e,...)
+				local tp=e:GetHandlerPlayer()
+				if Duel.GetPlayerEffect(tp,18454015) then
+					return false
+				end
+				return not con or con(e,...)
+			end)
+		end
+	end
+	if e:GetCode()==EFFECT_DESTROY_REPLACE then
+		if e:IsHasType(EFFECT_TYPE_SINGLE) then
+			local tg=e:GetTarget()
+			e:SetTarget(function(e,tp,...)
+				local c=e:GetHandler()
+				if Duel.GetPlayerEffect(tp,18454015) and c:IsReason(REASON_EFFECT) then
+					return false
+				end
+				return not tg or tg(e,tp,...)
+			end)
+		end
+		if e:IsHasType(EFFECT_TYPE_FIELD) then
+			local val=e:GetValue()
+			e:SetValue(function(e,c,...)
+				local tp=e:GetHandlerPlayer()
+				if Duel.GetPlayerEffect(tp,18454015) and c:IsReason(REASON_EFFECT) then
+					return false
+				end
+				return not val or val(e,c,...)
+			end)
+		end
+	end
+end
+
+local dregeff=Duel.RegisterEffect
+function Duel.RegisterEffect(e,...)
+	dregeff(e,...)
+	if e:GetCode()==EFFECT_CANNOT_BE_EFFECT_TARGET then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,...)
+			local tp=e:GetHandlerPlayer()
+			if Duel.GetPlayerEffect(tp,18454016) then
+				return false
+			end
+			return not con or con(e,...)
+		end)
+	end
+	if e:GetCode()==EFFECT_INDESTRUCTABLE_EFFECT then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,...)
+			local tp=e:GetHandlerPlayer()
+			if Duel.GetPlayerEffect(tp,18454015) then
+				return false
+			end
+			return not con or con(e,...)
+		end)
+	end
+	if e:GetCode()==EFFECT_DESTROY_REPLACE then
+		if e:IsHasType(EFFECT_TYPE_SINGLE) then
+			local tg=e:GetTarget()
+			e:SetTarget(function(e,tp,...)
+				local c=e:GetHandler()
+				if Duel.GetPlayerEffect(tp,18454015) and c:IsReason(REASON_EFFECT) then
+					return false
+				end
+				return not tg or tg(e,tp,...)
+			end)
+		end
+		if e:IsHasType(EFFECT_TYPE_FIELD) then
+			local val=e:GetValue()
+			e:SetValue(function(e,c,...)
+				local tp=e:GetHandlerPlayer()
+				if Duel.GetPlayerEffect(tp,18454015) and c:IsReason(REASON_EFFECT) then
+					return false
+				end
+				return not val or val(e,c,...)
+			end)
+		end
+	end
+end
+
+EFFECT_LILAC_ADDOP=18454143
+local cregeff=Card.RegisterEffect
+function Card.RegisterEffect(c,e,...)
+	cregeff(c,e,...)
+	if e:IsHasType(EFFECT_TYPE_ACTIONS) and not e:IsHasType(EFFECT_TYPE_CONTINUOUS) then
+		local op=e:GetOperation()
+		if op then
+			e:SetOperation(function(e,tp,...)
+				op(e,tp,...)
+				while true do
+					local eset={Duel.GetPlayerEffect(tp,EFFECT_LILAC_ADDOP)}
+					if #eset>0 then
+						local g=Group.CreateGroup()
+						local gt={}
+						for i=1,#eset do
+							local te=eset[i]
+							local token=Duel.CreateToken(tp,te:GetHandler():GetOriginalCode())
+							g:AddCard(token)
+							gt[token]=i
+						end
+						Duel.Hint(HINT_SELECTMSG,tp,0)
+						local sg=g:Select(tp,1,1,nil)
+						local tc=sg:GetFirst()
+						local te=eset[gt[tc]]
+						te:GetOperation()(e,tp,...)
+						te:Reset()
+					else
+						break
+					end
+				end
+			end)
+		end
+	end
+end
+
+local cregeff=Card.RegisterEffect
+function Card.RegisterEffect(c,e,...)
+	cregeff(c,e,...)
+	local code=c:GetOriginalCode()
+	if code==20065322 then
+		c20065322.listed_names={40640057,57116033}
+	end
+end
+
+EFFECT_JANUARY=18454200
+EFFECT_GHOSTELLAR=18454213
+
+local cregeff=Card.RegisterEffect
+function Card.RegisterEffect(c,e,forced,...)
+	local code=c:GetOriginalCode()
+	local mt=_G["c"..code]
+	cregeff(c,e,forced,...)
+	if code==80921533 and mt.eff_ct[c][1]==e then
+		local filter=function(c,se,ct,tp)
+			if ct==3 then
+				if not c:IsHasEffect(18454249) then
+					return false
+				end
+				Duel.RegisterFlagEffect(tp,80921533,0,0,0)
+				local res=c:IsSummonable(false,se)
+				Duel.ResetFlagEffect(tp,80921533)
+				return res
+			end
+			if not (c:IsSummonableCard() and c:CanSummonOrSet(false,se)) then
+				return false
+			end
+			local mi,ma=c:GetTributeRequirement()
+			return mi==ct or ma==ct
+		end
+		e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
+			local se=e:GetLabelObject()
+			local b1=Duel.CheckLPCost(tp,1000) and Duel.IsExistingMatchingCard(filter,tp,LOCATION_HAND,0,1,nil,se,1,tp)
+			local b2=Duel.CheckLPCost(tp,2000) and Duel.IsExistingMatchingCard(filter,tp,LOCATION_HAND,0,1,nil,se,2,tp)
+			local b3=Duel.CheckLPCost(tp,3000) and Duel.IsExistingMatchingCard(filter,tp,LOCATION_HAND,0,1,nil,se,3,tp)
+			if chk==0 then
+				return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and (b1 or b2 or b3)
+			end
+			local op=Duel.SelectEffect(tp,
+				{b1,aux.Stringid(80921533,1)},
+				{b2,aux.Stringid(80921533,2)},
+				{b3,aux.Stringid(18454249,0)}
+				)
+			Duel.PayLPCost(tp,op*1000)
+			e:SetLabel(op)
+			Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,1,tp,LOCATION_HAND)
+		end)
+		e:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+			local c=e:GetHandler()
+			local op=e:GetLabel()
+			local se=e:GetLabelObject()
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
+			local sc=Duel.SelectMatchingCard(tp,filter,tp,LOCATION_HAND,0,1,1,nil,se,op,tp):GetFirst()
+			if sc then
+				if op==3 then
+					Duel.RegisterFlagEffect(tp,80921533,0,0,0)
+					local e1=Effect.CreateEffect(c)
+					e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+					e1:SetCode(EVENT_MOVE)
+					e1:SetLabelObject(sc)
+					e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+						local sc=e:GetLabelObject()
+						if eg:IsContains(sc) then
+							Duel.ResetFlagEffect(tp,80921533)
+							e:Reset()
+						end
+					end)
+					Duel.RegisterEffect(e1,tp)
+					Duel.Summon(tp,sc,false,se)
+				else
+					Duel.SummonOrSet(tp,sc,false,se)
+				end
+			end
+		end)
+	elseif code==80921533 and mt.eff_ct[c][2]==e then
+		local te=mt.eff_ct[c][1]
+		local ge=Effect.CreateEffect(c)
+		ge:SetType(EFFECT_TYPE_IGNITION)
+		ge:SetRange(LOCATION_GRAVE+LOCATION_REMOVED)
+		ge:SetProperty(EFFECT_FLAG_BOTH_SIDE)
+		ge:SetCategory(CATEGORY_SUMMON)
+		ge:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			return Duel.GetPlayerEffect(tp,18454250)
+		end)
+		ge:SetTarget(te:GetTarget())
+		ge:SetOperation(te:GetOperation())
+		cregeff(c,ge)
+		local re=Effect.CreateEffect(c)
+		re:SetType(EFFECT_TYPE_SINGLE)
+		re:SetValue(SUMMON_TYPE_NORMAL)
+		cregeff(c,re)
+		ge:SetLabelObject(re)
+	end
 end
 
 if not RegEff then Duel.LoadScript("_register_effect.lua") end
