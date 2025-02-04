@@ -243,3 +243,29 @@ Duel.LoadScript("init_Crowel.lua")
 Duel.LoadScript("additional_setcards.lua")
 Duel.LoadScript("additional_setcards_expand.lua")
 
+local cregeff=Card.RegisterEffect
+Auxiliary.MetatableEffectCount=true
+function Card.RegisterEffect(c,e,forced,...)
+	local code=c:GetOriginalCode()
+	local mt=_G["c"..code]
+	if c:IsStatus(STATUS_INITIALIZING) and Auxiliary.MetatableEffectCount then
+		if not mt.eff_ct then
+			mt.eff_ct={}
+		end
+		if not mt.eff_ct[c] then
+			mt.eff_ct[c]={}
+		end
+		local ct=0
+		while true do
+			if mt.eff_ct[c][ct]==e then
+				break
+			end
+			if not mt.eff_ct[c][ct] then
+				mt.eff_ct[c][ct]=e
+				break
+			end
+			ct=ct+1
+		end
+	end
+	cregeff(c,e,forced,...)
+end
