@@ -272,7 +272,8 @@ function Duel.RegisterEffect(e,...)
 			end)
 		end
 	end
-endfunction Auxiliary.RegisterIdealMatter(c,code)
+end
+function Auxiliary.RegisterIdealMatter(c,code)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_ADJUST)
