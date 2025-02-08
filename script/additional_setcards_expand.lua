@@ -628,3 +628,4 @@ data_setname[18454270]={"음유사신"}
 data_setname[18454271]={"음유사신"}
 data_setname[18454272]={"음유사신"}
 data_setname[18454273]={"음유사신"}
+data_setname[66429798]={"음유사신"}
