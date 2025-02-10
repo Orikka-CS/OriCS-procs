@@ -765,6 +765,9 @@ function Card.RegisterEffect(c,e,forced,...)
 	end
 end
 
+FLAG_EFFECT_SHIELD=18454274
+EFFECT_SHIELD=18454274
+
 if not RegEff then Duel.LoadScript("_register_effect.lua") end
 
 --constants
