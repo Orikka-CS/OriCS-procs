@@ -684,6 +684,7 @@ data_setname[10723472]={"¹ö´×"}
 data_setname[28534130]={"¹ö´×"}
 data_setname[44968459]={"¹ö´×"}
 data_setname[19384334]={"¹ö´×"}
+data_setname[18452744]={"¹ö´×"}
 data_setname[74277583]={"ºê·¹ÀÌºê"}
 data_setname[33282498]={"ºê·¹ÀÌºê"}
 data_setname[61692648]={"ºê·¹ÀÌºê"}
