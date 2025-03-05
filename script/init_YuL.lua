@@ -11,6 +11,18 @@ CARD_FISH_N_KICKS	=32703716	--피쉬 앤 킥스
 CARD_FISH_N_BACKS	=21507589	--피쉬 앤 백스
 CARD_PESTILENCE		=62472614	--역병
 
+CARD_CYCLONE		=5318639	--싸이크론
+CARD_CYCLONE_GALAXY	=5133471	--갤럭시 싸이크론
+CARD_CYCLONE_COSMIC	=8267140	--코즈믹 싸이크론
+CARD_CYCLONE_DOUBLE	=75652080	--더블 싸이크론
+CARD_CYCLONE_DICE	=3493058	--주사위크론
+CARD_TORNADO_DRAGON	=6983839	--토네이드래곤
+CW_CYCLONE			=99970971	--난수나비(카오틱윙)
+CW_CYCLONE_GALAXY	=99970972	--갤럭시 카오틱윙
+CW_CYCLONE_COSMIC	=99970973	--코즈믹 카오틱윙
+CW_CYCLONE_DOUBLE	=99970974	--더블 카오틱윙
+CW_CYCLONE_DICE		=99970975	--다이스 카오틱윙
+
 EFFECT_CHANGE_SUMMON_TYPE	=99970548
 EFFECT_ADD_SUMMON_TYPE		=99970549
 EFFECT_REMOVE_SUMMON_TYPE	=99970550
@@ -67,6 +79,101 @@ function YuL.Set()
 	YuL.SetEquipTurn()
 end
 RegEff.sgref(function(e,c) if not YuL.GlobalSet then YuL.Set() end end)
+
+
+RegEff.scref(CARD_CYCLONE,0,function(e,c)
+	local filter = function(c,chaoticwing)
+		return c:IsSpellTrap() or chaoticwing
+	end
+	local target = function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+		local chaoticwing = Duel.IsPlayerAffectedByEffect(tp,CW_CYCLONE)
+		if chkc then return chkc:IsOnField() and filter(chkc,chaoticwing) and chkc~=e:GetHandler() end
+		if chk==0 then return Duel.IsExistingTarget(filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler(),chaoticwing) end
+		local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler(),chaoticwing)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	end
+	e:SetTarget(target)
+end)
+
+RegEff.scref(CARD_CYCLONE_GALAXY,0,function(e,c)
+	local filter = function(c)
+		return c:IsSpellTrap() and c:IsFacedown()
+	end
+	local target = function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+		local chaoticwing = Duel.IsPlayerAffectedByEffect(tp,CW_CYCLONE_GALAXY)
+		local ct=1
+		if chaoticwing then ct=2 end
+		if chkc then return chkc:IsOnField() and filter(chkc) and chkc~=e:GetHandler() end
+		if chk==0 then return Duel.IsExistingTarget(filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
+		local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,e:GetHandler())
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
+	end
+	e:SetTarget(target)
+end)
+
+RegEff.scref(CARD_CYCLONE_GALAXY,1,function(e,c)
+	local filter = function(c)
+		return c:IsSpellTrap() and c:IsFaceup()
+	end
+	local target = function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+		local chaoticwing = Duel.IsPlayerAffectedByEffect(tp,CW_CYCLONE_GALAXY)
+		local ct=1
+		if chaoticwing then ct=2 end
+		if chkc then return chkc:IsOnField() and filter(chkc) and chkc~=e:GetHandler() end
+		if chk==0 then return Duel.IsExistingTarget(filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
+		local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,e:GetHandler())
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
+	end
+	e:SetTarget(target)
+end)
+
+RegEff.scref(CARD_CYCLONE_COSMIC,0,function(e,c)
+	local filter = function(c)
+		return c:IsSpellTrap() and c:IsAbleToRemove()
+	end
+	local target = function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+		local chaoticwing = Duel.IsPlayerAffectedByEffect(tp,CW_CYCLONE_COSMIC)
+		local loc=LOCATION_ONFIELD
+		if chaoticwing then loc=LOCATION_ONFIELD+LOCATION_GRAVE end
+		if chkc then return chkc:IsOnField() and filter(chkc) and chkc~=e:GetHandler() end
+		if chk==0 then return Duel.IsExistingTarget(filter,tp,loc,loc,1,e:GetHandler()) end
+		local g=Duel.SelectTarget(tp,filter,tp,loc,loc,1,1,e:GetHandler())
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	end
+	e:SetTarget(target)
+end)
+
+RegEff.scref(CARD_CYCLONE_DICE,0,function(e,c)
+	local operation = function(e,tp,eg,ep,ev,re,r,rp)
+		local chaoticwing = Duel.IsPlayerAffectedByEffect(tp,CW_CYCLONE_DICE)
+		local g=Duel.GetMatchingGroup(Card.IsSpellTrap,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
+		local dc=0
+		if chaoticwing then
+			dc=Duel.SelectEffect(tp,
+				{#g>0,aux.Stringid(CW_CYCLONE_DICE,2)},
+				{#g>1,aux.Stringid(CW_CYCLONE_DICE,3)},
+				{true,aux.Stringid(CW_CYCLONE_DICE,4)})
+			if dc==1 then dc=2 
+			elseif dc==2 then dc=5
+			else dc=1 end
+		else
+			dc=Duel.TossDice(tp,1)
+		end
+		if dc==1 or dc==6 then
+			Duel.Damage(tp,1000,REASON_EFFECT)
+		elseif dc==5 then
+			if #g<2 then return end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+			local dg=g:Select(tp,2,2,nil)
+			Duel.Destroy(dg,REASON_EFFECT)
+		else
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+			local dg=g:Select(tp,1,1,nil)
+			Duel.Destroy(dg,REASON_EFFECT)
+		end
+	end
+	e:SetOperation(operation)
+end)
 
 --엑시즈 베일
 RegEff.scref(96457619,1,function(e,c)
