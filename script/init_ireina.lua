@@ -2606,7 +2606,7 @@ local EineKleineScrefTable = {
 	[84211599] = {[0]=function(e,c)
 		e:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
 			if chk==0 then
-				return Duel.GetFlagEffect(tp,id)==0 or Duel.GetPlayerEffect(tp,EFFECT_GREED_SWALLOW)
+				return Duel.GetFlagEffect(tp,84211599)==0 or Duel.GetPlayerEffect(tp,EFFECT_GREED_SWALLOW)
 			end
 			if not e:IsHasType(EFFECT_TYPE_ACTIVATE) or Duel.GetPlayerEffect(tp,EFFECT_GREED_SWALLOW) then
 				return
