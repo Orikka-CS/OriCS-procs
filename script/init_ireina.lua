@@ -2604,41 +2604,24 @@ local EineKleineScrefTable = {
 		end)
 	end},
 	[84211599] = {[0]=function(e,c)
-		e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
-			local g=Duel.GetMatchingGroup(Card.IsAbleToRemoveAsCost,tp,LOCATION_EXTRA,0,nil,POS_FACEDOWN)
-			local count=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
-			local b1=#g>=3 and count>=3 and Duel.GetDecktopGroup(tp,3):IsExists(Card.IsAbleToHand,1,nil)
-			local b2=#g>=6 and count>=6 and Duel.GetDecktopGroup(tp,6):IsExists(Card.IsAbleToHand,1,nil)
+		e:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
 			if chk==0 then
-				if e:GetLabel()~=100 then return false end
-				e:SetLabel(0)
-				return (Duel.GetFlagEffect(tp,84211599)==0 or Duel.IsPlayerAffectedByEffect(tp,EFFECT_GREED_SWALLOW))
-					and (b1 or b2)
+				return Duel.GetFlagEffect(tp,id)==0 or Duel.GetPlayerEffect(tp,EFFECT_GREED_SWALLOW)
 			end
-			local op=0
-			if b1 and b2 then
-				op=Duel.SelectOption(tp,aux.Stringid(84211599,0),aux.Stringid(84211599,1))
-			else
-				op=Duel.SelectOption(tp,aux.Stringid(84211599,0))
+			if not e:IsHasType(EFFECT_TYPE_ACTIVATE) or Duel.GetPlayerEffect(tp,EFFECT_GREED_SWALLOW) then
+				return
 			end
-			local ct= op==0 and 3 or 6
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local rg=g:Select(tp,ct,ct,nil)
-			Duel.Remove(rg,POS_FACEDOWN,REASON_COST)
-			Duel.SetTargetPlayer(tp)
-			Duel.SetTargetParam(ct)
-			Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,0,LOCATION_DECK)
-			if not e:IsHasType(EFFECT_TYPE_ACTIVATE) or Duel.IsPlayerAffectedByEffect(tp,EFFECT_GREED_SWALLOW) then return end
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_FIELD)
 			e1:SetCode(EFFECT_CANNOT_DRAW)
-			e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+			e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT+EFFECT_FLAG_OATH)
+			e1:SetDescription(aux.Stringid(id,2))
 			e1:SetTargetRange(1,0)
 			e1:SetReset(RESET_PHASE+PHASE_END)
 			Duel.RegisterEffect(e1,tp)
 		end)
 		e:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
-			local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+			local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER),e:GetLabel()
 			Duel.ConfirmDecktop(p,d)
 			local g=Duel.GetDecktopGroup(p,d)
 			if #g>0 then
@@ -2649,18 +2632,16 @@ local EineKleineScrefTable = {
 					Duel.SendtoHand(sc,nil,REASON_EFFECT)
 					Duel.ConfirmCards(1-p,sc)
 					Duel.ShuffleHand(p)
+					g:RemoveCard(sc)
+					Duel.MoveToDeckBottom(g,p)
+					Duel.SortDeckbottom(p,p,#g)
 				else
 					Duel.SendtoGrave(sc,REASON_RULE)
 				end
 			end
-			if #g>1 then
-				Duel.SortDecktop(tp,tp,#g-1)
-				for i=1,#g-1 do
-					local dg=Duel.GetDecktopGroup(tp,1)
-					Duel.MoveSequence(dg:GetFirst(),1)
-				end
+			if not e:IsHasType(EFFECT_TYPE_ACTIVATE) or Duel.GetPlayerEffect(tp,EFFECT_GREED_SWALLOW) then
+				return
 			end
-			if not e:IsHasType(EFFECT_TYPE_ACTIVATE) or Duel.IsPlayerAffectedByEffect(tp,EFFECT_GREED_SWALLOW) then return end
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_FIELD)
 			e1:SetCode(EFFECT_CHANGE_DAMAGE)
@@ -2669,6 +2650,7 @@ local EineKleineScrefTable = {
 			e1:SetValue(mt.damval)
 			e1:SetReset(RESET_PHASE+PHASE_END)
 			Duel.RegisterEffect(e1,tp)
+			aux.RegisterClientHint(e:GetHandler(),nil,tp,1,0,aux.Stringid(id,1),nil)
 		end)
 	end}
 }
