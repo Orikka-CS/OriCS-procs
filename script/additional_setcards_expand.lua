@@ -164,6 +164,7 @@ data_setname[21313376]={"욕망"}
 data_setname[99970146]={"욕망"}
 data_setname[18452777]={"항아리"}
 data_setname[35261759]={"항아리"}
+data_setname[49238328]={"항아리"}
 data_setname[51790181]={"항아리"}
 data_setname[55144522]={"항아리"}
 data_setname[67169062]={"항아리"}
