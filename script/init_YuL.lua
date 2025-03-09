@@ -108,7 +108,12 @@ RegEff.scref(CARD_CYCLONE_GALAXY,0,function(e,c)
 		local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,e:GetHandler())
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
 	end
+	local operation = function(e,tp,eg,ep,ev,re,r,rp)
+		local g=Duel.GetTargetCards(e)
+		Duel.Destroy(g,REASON_EFFECT)
+	end
 	e:SetTarget(target)
+	e:SetOperation(operation)
 end)
 
 RegEff.scref(CARD_CYCLONE_GALAXY,1,function(e,c)
@@ -124,7 +129,12 @@ RegEff.scref(CARD_CYCLONE_GALAXY,1,function(e,c)
 		local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,e:GetHandler())
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
 	end
+	local operation = function(e,tp,eg,ep,ev,re,r,rp)
+		local g=Duel.GetTargetCards(e)
+		Duel.Destroy(g,REASON_EFFECT)
+	end
 	e:SetTarget(target)
+	e:SetOperation(operation)
 end)
 
 RegEff.scref(CARD_CYCLONE_COSMIC,0,function(e,c)
