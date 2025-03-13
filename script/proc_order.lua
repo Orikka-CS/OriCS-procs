@@ -65,7 +65,7 @@ function Duel.OrderSummon(p,c)
 	end
 end
 
---д©╫╨ере╦ют ©ю╢У
+--Л╩╓Л┼╓М┘─М┐─Л·┘ Л≤╓К█■
 
 function Auxiliary.AddCustomTypeOrder(c)
 	local mt=getmetatable(c)
@@ -73,7 +73,7 @@ function Auxiliary.AddCustomTypeOrder(c)
 	mt.custom_type=CUSTOMTYPE_ORDER
 end
 
---©ю╢У ╪рх╞ ю╞ф©╦╝ф╪
+--Л≤╓К█■ Л├▄М≥≤ Л°═М▀╦К╕╛М▀╟
 
 function Auxiliary.AddOrderProcedure(c,dir,gf,...)
 	local f={...}
@@ -176,7 +176,7 @@ function Auxiliary.OrderOperation(gf,...)
 	end
 end
 
---ю╤гу е╦ют ╩Ха╕
+--Л°╣М∙╘ М┐─Л·┘ Л┌╜Л═°
 local type=Card.GetType
 Card.GetType=function(c)
 	if c.CardType_Order then

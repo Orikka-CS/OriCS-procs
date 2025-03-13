@@ -1,8 +1,8 @@
 spinel={}
 Spinel=spinel
 
---¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á
---¡á½ºÆç ½ºÇÇµå Á¶Á¤
+--â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– 
+--â– ìŠ¤í  ìŠ¤í”¼ë“œ ì¡°ì •
 
 GlobalSpellSpeed=false
 GlobalSpellSpeedTable={}
@@ -73,11 +73,11 @@ function RegisterSpellSpeedCheck()
 	Duel.RegisterEffect(e1,0)
 end
 
---¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á
---¡á¡á ÀÌÇÏ È¿°ú ¾ş´Â°Å / ³­ ÀÌ·±°É Â§ ±â¾ïÀÌ ¾ø´Âµ¥ ¤»¤»
+--â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– 
+--â– â–  ì´í•˜ íš¨ê³¼ ì—ëŠ”ê±° / ë‚œ ì´ëŸ°ê±¸ ì§  ê¸°ì–µì´ ì—†ëŠ”ë° ã…‹ã…‹
 local cregeff = {}
 
---Æ®¶ó¹Ìµå ¸¶½ºÅÍ
+--íŠ¸ë¼ë¯¸ë“œ ë§ˆìŠ¤í„°
 cregeff[32912040] = {
 	[0] = function(e,c)
 		local cost=e:GetCost()
@@ -105,14 +105,14 @@ cregeff[32912040] = {
 			return Duel.IsPlayerAffectedByEffect(tp,99000347) or Duel.GetTurnPlayer()~=tp
 		end)
 	end}
---Æ®¶ó¹Ìµå ÇåÅÍ
+--íŠ¸ë¼ë¯¸ë“œ í—Œí„°
 cregeff[95923441] = {
 	[1] = function(e,c)
 		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 			return Duel.IsPlayerAffectedByEffect(tp,99000347) or Duel.GetTurnPlayer()~=tp
 		end)
 	end}
---Æ®¶ó¹Ìµå ´í¼­
+--íŠ¸ë¼ë¯¸ë“œ ëŒ„ì„œ
 cregeff[69529337] = {
 	[0] = function(e,c)
 		e:SetCountLimit(999)
@@ -138,7 +138,7 @@ cregeff[69529337] = {
 			return Duel.IsPlayerAffectedByEffect(tp,99000347) or Duel.GetTurnPlayer()~=tp
 		end)
 	end}
---°¢¼ºÀÇ ºû
+--ê°ì„±ì˜ ë¹›
 function spinel.lightfilter(c,tp)
 	return c:IsFaceup()
 		and (c:IsAttribute(ATTRIBUTE_EARTH)
@@ -160,20 +160,20 @@ cregeff[98374133] = {
 			return spinel.lightfilter(c,e:GetHandlerPlayer())
 		end)
 	end}
---°³º° Ä«µå È¿°ú ´Ù ¾ş°í ³ª¼­ ÀÌÁßfor¹®
+--ê°œë³„ ì¹´ë“œ íš¨ê³¼ ë‹¤ ì—ê³  ë‚˜ì„œ ì´ì¤‘forë¬¸
 for code,t in ipairs(cregeff) do
 	for ct,f in ipairs(t) do
 		RegEff.scref(code,ct,f)
 	end
 end
 
---¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á
---¡á¡á	¾È¾²´Âµ¥ È¤½Ã³ª ½Í¾î¼­
+--â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– 
+--â– â– 	ì•ˆì“°ëŠ”ë° í˜¹ì‹œë‚˜ ì‹¶ì–´ì„œ
 
---¡áEFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP
+--â– EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP
 spinel.delay=0x14000
 
---¡á¿¢½ÃÁî ¼ÒÀç Á¦°Å (ct=Á¦°ÅÇÒ ¼ö)
+--â– ì—‘ì‹œì¦ˆ ì†Œì¬ ì œê±° (ct=ì œê±°í•  ìˆ˜)
 function spinel.rmovcost(ct)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,ct,REASON_COST) end
@@ -181,7 +181,7 @@ function spinel.rmovcost(ct)
 	end
 end
 
---¡áÀÚ±âÀÚ½Å ÄÚ½ºÆ®
+--â– ìê¸°ìì‹  ì½”ìŠ¤íŠ¸
 function spinel.relcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
@@ -207,7 +207,7 @@ function spinel.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
 end
 
---¡áµå·Î¿ì (pl=ÇÃ·¹ÀÌ¾î[ÀÚ½Å 0, »ó´ë 1], ct=¼ö)
+--â– ë“œë¡œìš° (pl=í”Œë ˆì´ì–´[ìì‹  0, ìƒëŒ€ 1], ct=ìˆ˜)
 function spinel.drawtg(pl,ct)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return Duel.IsPlayerCanDraw(math.abs(pl-tp),ct) end
@@ -221,14 +221,14 @@ function spinel.drawop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
 
---¡á¿¢½ÃÁî ¼ÒÀç¼ö Ã¼Å©
+--â– ì—‘ì‹œì¦ˆ ì†Œì¬ìˆ˜ ì²´í¬
 function spinel.xmcon(ct,excon)
 	return function(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayCount()>=ct and (not excon or excon(e,tp,eg,ep,ev,re,r,rp))
 	end
 end
 
---¡á½ºÆ®¸µ Ãâ·Â
+--â– ìŠ¤íŠ¸ë§ ì¶œë ¥
 function spinel.desccost(costf)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return (not costf or costf(e,tp,eg,ep,ev,re,r,rp,0)) end
@@ -237,15 +237,15 @@ function spinel.desccost(costf)
 	end
 end
 
---¡á¼ÒÈ¯Å¸ÀÔ Ã¼Å©
+--â– ì†Œí™˜íƒ€ì… ì²´í¬
 function spinel.stypecon(t,con)
 	return function(e,tp,eg,ep,ev,re,r,rp)
 		return bit.band(e:GetHandler():GetSummonType(),t)==t and (not con or con(e,tp,eg,ep,ev,re,r,rp))
 	end
 end
 
---¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á
---¡á¡á	ÁÖ¼® ¶óÀÎ / ¿¾³¯ init ¹é¾÷
+--â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– 
+--â– â– 	ì£¼ì„ ë¼ì¸ / ì˜›ë‚  init ë°±ì—…
 --[[
 
 UnlimitChain={}
@@ -262,7 +262,7 @@ function Duel.SetChainLimit(f)
 	end)
 end
 
---¡á¼Ò¸ê
+--â– ì†Œë©¸
 function Duel.Delete(e,sg)	
 	local over=Group.CreateGroup()
 	if aux.GetValueType(sg)=="Group" then
@@ -316,14 +316,14 @@ function Duel.Delete(e,sg)
 	end
 end
 
---¡áÆ®¶ó¹Ìµå ¾Æ´©ºñ½º
+--â– íŠ¸ë¼ë¯¸ë“œ ì•„ëˆ„ë¹„ìŠ¤
 
 local cregeff=Card.RegisterEffect
 function Card.RegisterEffect(c,e,forced,...)
 	cregeff(c,e,forced,...)
 	local code=c:GetOriginalCode()
 	local mt=_G["c"..code]
-	--Æ®¶ó¹Ìµå ¸¶½ºÅÍ
+	--íŠ¸ë¼ë¯¸ë“œ ë§ˆìŠ¤í„°
 	if code==32912040 and mt.eff_ct[c][0]==e then
 		local cost=e:GetCost()
 		e:SetCountLimit(999)
@@ -351,13 +351,13 @@ function Card.RegisterEffect(c,e,forced,...)
 		return Duel.IsPlayerAffectedByEffect(tp,99000347) or Duel.GetTurnPlayer()~=tp
 		end)
 	end
-	--Æ®¶ó¹Ìµå ÇåÅÍ
+	--íŠ¸ë¼ë¯¸ë“œ í—Œí„°
 	if code==95923441 and mt.eff_ct[c][1]==e then
 		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		return Duel.IsPlayerAffectedByEffect(tp,99000347) or Duel.GetTurnPlayer()~=tp
 		end)
 	end
-	--Æ®¶ó¹Ìµå ´í¼­
+	--íŠ¸ë¼ë¯¸ë“œ ëŒ„ì„œ
 	if code==69529337 and mt.eff_ct[c][0]==e then
 		e:SetCountLimit(999)
 		e:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -385,7 +385,7 @@ function Card.RegisterEffect(c,e,forced,...)
 	end
 end
 
---¡á¾Æ½ºÅÚ¶ó °¢¼ºÀÇ ºû
+--â– ì•„ìŠ¤í…”ë¼ ê°ì„±ì˜ ë¹›
 
 local cregeff=Card.RegisterEffect
 function Card.RegisterEffect(c,e,forced,...)
@@ -413,7 +413,7 @@ function spinel.lightfilter(c,tp)
 end
 
 
---¡áÁ¦·Î´Ï¾î ½´ÆÛÆ¯¼Ò
+--â– ì œë¡œë‹ˆì–´ ìŠˆí¼íŠ¹ì†Œ
 
 --if not ZeronierTable then ZeronierTable={} end
 
@@ -465,7 +465,7 @@ function Duel.RegisterEffect(e,tp,forced,...)
 	dregeff(e,tp,forced,...)
 end
 
---¡á½ºÇÇ³Ú ½´ÆÛ¹ßµ¿
+--â– ìŠ¤í”¼ë„¬ ìŠˆí¼ë°œë™
 
 if not SpinelTable then SpinelTable={} end
 
@@ -549,4 +549,4 @@ end
 
 
 --]]
---¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á
+--â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– â– 
