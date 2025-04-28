@@ -3,6 +3,17 @@ local function make_deprecated_function_alias(old_funcname,new_funcname)
 		return load("return ]] .. new_funcname .. [[(...)")(...)
 	end]],"make_deprecated_function_alias")()
 end
+local function make_deprecated_function_no_replacement(old_funcname,message)
+	load(old_funcname .. [[=
+		(function()
+			local oldfunc=]] .. old_funcname .. [[
+			return function(...)
+				Debug.PrintStacktrace()
+				Debug.Message("]] .. old_funcname .. [[ is deprecated and will be removed. ]] .. message .. [[")
+				return oldfunc(...)
+			end
+		end)()]],"make_deprecated_function_no_replacement")()
+end
 
 --Functions deprecated since version 41.0:
 make_deprecated_function_no_replacement("Duel.GetEnvironment", "You should use Duel.IsEnvironment to check if a field spell is active on the field.")
