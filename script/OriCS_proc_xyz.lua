@@ -78,6 +78,7 @@ function Xyz.AddProcedure(c,f,lv,ct,alterf,desc,maxct,op,mustbemat,exchk)
 		e2:SetOperation(Xyz.Operation2(alterf,op))
 		c:RegisterEffect(e2)
 	end
+	return e1
 end
 --Xyz Summon(normal)
 function Xyz.MatFilter2(c,f,lv,xyz,tp)
@@ -299,6 +300,9 @@ function Xyz.Condition(f,lv,minc,maxc,mustbemat,exchk)
 				if not mustbemat then
 					mg:Merge(Duel.GetMatchingGroup(Card.IsHasEffect,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil,EFFECT_ORICHALCUM_CHAIN))
 				end
+				local emt,tg=aux.GetExtraMaterials(tp,mustg+mg,c,SUMMON_TYPE_XYZ)
+				tg:Match(Xyz.MatFilter,nil,f,lv,c,tp)
+				mg:Merge(tg)
 				min=min or 0
 				return mg:IsExists(Xyz.RecursionChk,1,nil,mg,c,tp,min,max,minc,maxc,Group.CreateGroup(),Group.CreateGroup(),0,0,mustbemat,exchk,f,mustg,lv,eqmg,equips_inverse)
 			end
@@ -354,6 +358,9 @@ function Xyz.Target(f,lv,minc,maxc,mustbemat,exchk)
 					e:SetLabelObject(mustg:Clone():KeepAlive())
 					return true
 				end
+				local emt,tg=aux.GetExtraMaterials(tp,mustg+mg,c,SUMMON_TYPE_XYZ)
+				tg:Match(Xyz.MatFilter,nil,f,lv,c,tp)
+				mg:Merge(tg)
 				do
 					local extra_mats=0
 					min=min or 0
