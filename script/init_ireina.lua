@@ -121,12 +121,14 @@ function Card.RegisterEffect(c,e,forced,...)
 				if Duel.AnnounceCoin(tp)~=Duel.TossCoin(1-tep,1) then
 					local top=te:GetOperation()
 					local tres=top(e,tp)
+					Auxiliary.CheckDisSumAble=true
 					if not tres
 						or (con and not con(e,tp,eg,ep,ev,re,r,rp))
 						or (cost and not cost(e,tp,eg,ep,ev,re,r,rp,0))
 						or (tg and not tg(e,tp,eg,ep,ev,re,r,rp,0)) then
 						coinbeat_misfire=true
 					end
+					Auxiliary.CheckDisSumAble=false
 				end
 			end
 			if coinbeat_misfire then
@@ -208,12 +210,14 @@ function Duel.RegisterEffect(e,...)
 				if Duel.AnnounceCoin(tp)~=Duel.TossCoin(1-tep,1) then
 					local top=te:GetOperation()
 					local tres=top(e,tp)
+					Auxiliary.CheckDisSumAble=true
 					if not tres
 						or (con and not con(e,tp,eg,ep,ev,re,r,rp))
 						or (cost and not cost(e,tp,eg,ep,ev,re,r,rp,0))
 						or (tg and not tg(e,tp,eg,ep,ev,re,r,rp,0)) then
 						coinbeat_misfire=true
 					end
+					Auxiliary.CheckDisSumAble=false
 				end
 			end
 			if coinbeat_misfire then
