@@ -2662,39 +2662,85 @@ RegEff.scref(18452777,0,EineKleineScrefTable[18452777][0])	--(custom) 욕망과 
 RegEff.scref(35261759,0,EineKleineScrefTable[35261759][0])	--욕망과 탐욕의 항아리
 RegEff.scref(84211599,0,EineKleineScrefTable[84211599][0])	--졸부와 겸허의 항아리
 
---Delightsworn utilities
-local DelightswornScrefFunc = function(e,c)
-	local con=e:GetCondition()
-	e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-		local rc=re:GetHandler()
-		if rc.delightsworn then
-			return true
+local cregeff=Card.RegisterEffect
+function Card.RegisterEffect(c,e,forced,...)
+	local code=c:GetOriginalCode()
+	local mt=_G["c"..code]
+	cregeff(c,e,forced,...)
+	if code==67750322 and mt.eff_ct[c][0]==e then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			local rc=re:GetHandler()
+			if rc.delightsworn then
+				return true
+			end
+			return con(e,tp,eg,ep,ev,re,r,rp)
+		end)
+	elseif code==59438930 and mt.eff_ct[c][0]==e then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			local rc=re:GetHandler()
+			if rc.delightsworn then
+				return true
+			end
+			return con(e,tp,eg,ep,ev,re,r,rp)
+		end)
+	elseif code==38814750 and mt.eff_ct[c][1]==e then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			local rc=re:GetHandler()
+			if rc.delightsworn then
+				return true
+			end
+			return con(e,tp,eg,ep,ev,re,r,rp)
+		end)
+	elseif code==14558127 and mt.eff_ct[c][0]==e then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			local rc=re:GetHandler()
+			if rc.delightsworn then
+				return true
+			end
+			return con(e,tp,eg,ep,ev,re,r,rp)
+		end)
+	elseif code==73642296 and mt.eff_ct[c][0]==e then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			local rc=re:GetHandler()
+			if rc.delightsworn then
+				return true
+			end
+			return con(e,tp,eg,ep,ev,re,r,rp)
+		end)
+	elseif code==52038441 and mt.eff_ct[c][0]==e then
+		local filter1=function(c,e,tp)
+			return (c:IsSummonPlayer(1-tp) and c:IsCanBeEffectTarget(e) and c:IsLocation(LOCATION_MZONE) and (c:HasNonZeroAttack() or c:IsNegatableMonster()))
+				or c.delightsworn
 		end
-		return con(e,tp,eg,ep,ev,re,r,rp)
-	end)
-	return e
-end
-local DelightswornScrefTable = {
-	[52038441] = {[0]=function(e,c)
-		local filter1=function(c)
-			return c:IsFaceup() and c.delightsworn
-		end
-		local filter2=function(c,g)
-			return (g:IsContains(c) and c:IsLocation(LOCATION_MZONE)) or c.delightsworn
+		local filter2=function(c)
+			return c.delightsworn
 		end
 		e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-			local g=eg:Filter(c52038441.cfilter,nil,tp)
-			local sg=Duel.GetMatchingGroup(filter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+			local g=e:GetLabelObject():Filter(filter1,nil,e,tp)
+			local sg=Duel.GetMatchingGroup(filter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 			g:Merge(sg)
-			if chkc then return chkc:IsOnField() and filter2(chkc,g) end
-			if chk==0 then return Duel.IsExistingTarget(filter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,g) end
-			if g:GetCount()==1 then
-				Duel.SetTargetCard(g)
-			else
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-				Duel.SelectTarget(tp,filter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,g)
+			if chkc then
+				return g:IsContains(chkc) and filter1(chkc,e,tp)
 			end
+			if chk==0 then
+				return #g>0
+			end
+			local tg=nil
+			if #g>1 then
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_NEGATE)
+				tg=g:Select(tp,1,1,nil)
+			else
+				tg=g
+			end
+			Duel.SetTargetCard(tg)
+			Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 		end)
+		Auxiliary.MetatableEffectCount=false
 		local e1=e:Clone()
 		e1:SetType(EFFECT_TYPE_QUICK_O)
 		e1:SetCode(EVENT_CHAINING)
@@ -2703,10 +2749,27 @@ local DelightswornScrefTable = {
 			local rc=re:GetHandler()
 			return rc.delightsworn
 		end)
-		Card.RegisterEffect(c,e1)
-		return {e,e1}
-	end},
-	[24508238] = {[0]=function(e,c)
+		cregeff(c,e1)
+		Auxiliary.MetatableEffectCount=true
+	elseif code==99000133 and mt.eff_ct[c][0]==e then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			local rc=re:GetHandler()
+			if rc.delightsworn then
+				return true
+			end
+			return con(e,tp,eg,ep,ev,re,r,rp)
+		end)
+	elseif code==32415008 and (mt.eff_ct[c][0]==1 or mt.eff_ct[c][0]==2) then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			local rc=re:GetHandler()
+			if rc.delightsworn then
+				return true
+			end
+			return con(e,tp,eg,ep,ev,re,r,rp)
+		end)
+	elseif code==24508238 and mt.eff_ct[c][0]==e then
 		local filter=function(c,tp)
 			return c:IsAbleToRemove() and ((c:IsLocation(LOCATION_GRAVE) and c:IsControler(1-tp)) or (c:IsFaceup() and c.delightsworn))
 		end
@@ -2717,8 +2780,7 @@ local DelightswornScrefTable = {
 			local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_GRAVE+LOCATION_ONFIELD,1,1,nil,tp)
 			Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 		end)
-	end},
-	[97268402] = {[0]=function(e,c)
+	elseif code==97268402 and mt.eff_ct[c][0]==e then
 		local filter=function(c,tp)
 			return c:IsFaceup()
 				and ((not c:IsDisabled() and c:IsType(TYPE_EFFECT) and c:IsControler(1-tp) and c:IsLocation(LOCATION_MZONE))
@@ -2731,8 +2793,102 @@ local DelightswornScrefTable = {
 			local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,tp)
 			Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 		end)
-	end},
-	[18452762] = {[0]=function(e,c)
+	--temp
+	elseif code==10045474 and mt.eff_ct[c][0]==e and YGOPRO_VERSION~="Percy/EDO" then
+		local filter=function(c,tp)
+			return c:IsFaceup()
+				and ((aux.disfilter1(c) and c:IsControler(1-tp) and c:IsLocation(LOCATION_MZONE))
+					or c.delightsworn)
+		end
+		e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+			if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and filter(chkc,tp) end
+			if chk==0 then return Duel.IsExistingTarget(filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,tp) end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+			local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,tp)
+		end)
+	elseif code==6637331 and mt.eff_ct[c][0]==e then
+		local filter=function(c,tp)
+			return c:IsAbleToRemove() and c:IsFaceup() and Duel.GetMZoneCount(tp,c)>0 and
+				((c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK) and aux.SpElimFilter(c,true))
+					or c.delightsworn)
+		end
+		e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+			if chkc then return chkc:IsLocation(LOCATION_ONFIELD|LOCATION_GRAVE) and s.spfilter(chkc,tp) end
+			local c=e:GetHandler()
+			if chk==0 then return Duel.IsExistingTarget(s.spfilter,tp,LOCATION_ONFIELD|LOCATION_GRAVE,LOCATION_ONFIELD|LOCATION_GRAVE,1,nil,tp)
+				and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_ONFIELD|LOCATION_GRAVE,LOCATION_ONFIELD|LOCATION_GRAVE,1,1,nil,tp)
+			Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,tp,0)
+			Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,LOCATION_HAND)
+		end)
+	elseif code==33854624 and mt.eff_ct[c][0]==e then
+		local filter=function(c,tp)
+			return c:IsAbleToRemove() and c:IsFaceup() and Duel.GetMZoneCount(tp,c)>0 and
+				((c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK) and aux.SpElimFilter(c,true))
+					or c.delightsworn)
+		end
+		e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+			if chkc then return chkc:IsLocation(LOCATION_ONFIELD|LOCATION_GRAVE) and s.spfilter(chkc,tp) end
+			local c=e:GetHandler()
+			if chk==0 then return Duel.IsExistingTarget(s.spfilter,tp,LOCATION_ONFIELD|LOCATION_GRAVE,LOCATION_ONFIELD|LOCATION_GRAVE,1,nil,tp)
+				and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_ONFIELD|LOCATION_GRAVE,LOCATION_ONFIELD|LOCATION_GRAVE,1,1,nil,tp)
+			Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,tp,0)
+			Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,LOCATION_HAND)
+		end)
+	elseif code==60242223 and mt.eff_ct[c][0]==e then
+		local filter=function(c,tp)
+			return c:IsAbleToRemove() and c:IsFaceup() and Duel.GetMZoneCount(tp,c)>0 and
+				((c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK) and aux.SpElimFilter(c,true))
+					or c.delightsworn)
+		end
+		e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+			if chkc then return chkc:IsLocation(LOCATION_ONFIELD|LOCATION_GRAVE) and s.spfilter(chkc,tp) end
+			local c=e:GetHandler()
+			if chk==0 then return Duel.IsExistingTarget(s.spfilter,tp,LOCATION_ONFIELD|LOCATION_GRAVE,LOCATION_ONFIELD|LOCATION_GRAVE,1,nil,tp)
+				and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_ONFIELD|LOCATION_GRAVE,LOCATION_ONFIELD|LOCATION_GRAVE,1,1,nil,tp)
+			Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,tp,0)
+			Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,LOCATION_HAND)
+		end)
+	elseif code==72656408 and mt.eff_ct[c][0]==e then
+		local filter=function(c,tp)
+			return c:IsAbleToRemove() and c:IsFaceup() and Duel.GetMZoneCount(tp,c)>0 and
+				((c:IsAttribute(ATTRIBUTE_LIGHT+ATTRIBUTE_DARK) and aux.SpElimFilter(c,true))
+					or c.delightsworn)
+		end
+		e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+			if chkc then return chkc:IsLocation(LOCATION_ONFIELD|LOCATION_GRAVE) and s.spfilter(chkc,tp) end
+			local c=e:GetHandler()
+			if chk==0 then return Duel.IsExistingTarget(s.spfilter,tp,LOCATION_ONFIELD|LOCATION_GRAVE,LOCATION_ONFIELD|LOCATION_GRAVE,1,nil,tp)
+				and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			local g=Duel.SelectTarget(tp,s.spfilter,tp,LOCATION_ONFIELD|LOCATION_GRAVE,LOCATION_ONFIELD|LOCATION_GRAVE,1,1,nil,tp)
+			Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,tp,0)
+			Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,LOCATION_HAND)
+		end)
+	elseif code==40366667 and mt.eff_ct[c][0]==e then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			local rc=re:GetHandler()
+			if rc.delightsworn then
+				return true
+			end
+			return con(e,tp,eg,ep,ev,re,r,rp)
+		end)
+	elseif code==97045737 and mt.eff_ct[c][0]==e then
+		local con=e:GetCondition()
+		e:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			local rc=re:GetHandler()
+			if rc.delightsworn then
+				return true
+			end
+			return con(e,tp,eg,ep,ev,re,r,rp)
+		end)
+	elseif code==18452762 and mt.eff_ct[c][0]==e then
 		local filter=function(c,tp)
 			return c:IsFaceup()
 				and ((aux.disfilter1(c) and c:IsControler(1-tp) and c:IsType(TYPE_SPELL+TYPE_TRAP))
@@ -2745,74 +2901,39 @@ local DelightswornScrefTable = {
 			local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,tp)
 			Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 		end)
-	end},
-	[112603120] = {
-		[0] = function(e,c)
-			local filter=function(c,tp)
-				return c:IsFaceup()
-					and ((not c:IsDisabled() and c:IsType(TYPE_EFFECT) and not c:IsCode(code)
-						and c:IsControler(1-tp)	and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED))
-						or c.delightsworn)
-			end
-			e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-				if chkc then return chkc:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED) and filter(chkc,tp) end
-				if chk==0 then
-					return Duel.IsExistingTarget(filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,1,nil,tp)
-				end
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-				local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,1,1,nil,tp)
-				Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
-			end)
-		end,
-		[1] = function(e,c)
-			local filter=function(c,tp)
-				return c:IsFaceup()
-					and ((not c:IsDisabled() and not c:IsType(TYPE_NORMAL) and not c:IsCode(code)
-						and c:IsControler(1-tp)	and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED))
-						or c.delightsworn)
-			end
-			e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-				if chkc then return chkc:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED) and filter(chkc,tp) end
-				if chk==0 then
-					return Duel.IsExistingTarget(filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,1,nil,tp)
-				end
-				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-				local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,1,1,nil,tp)
-				Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
-			end)
-		end
-	}
-}
-RegEff.scref(67750322,0,DelightswornScrefFunc)					--스컬 마이스터
-RegEff.scref(59438930,0,DelightswornScrefFunc)					--유령토끼
-RegEff.scref(38814750,1,DelightswornScrefFunc)					--PSY프레임기어 γ
-RegEff.scref(14558127,0,DelightswornScrefFunc)					--하루 우라라
-RegEff.scref(73642296,0,DelightswornScrefFunc)					--저택 와라시
-RegEff.scref(52038441,0,DelightswornScrefTable[52038441][0])		--사요 시구레
-RegEff.scref(99000133,0,DelightswornScrefFunc)					--(custom) 무녀 미코토
-RegEff.scref(32415008,1,DelightswornScrefFunc)					--(custom) I'm not D.D.crow!
-RegEff.scref(32415008,2,DelightswornScrefFunc)					--(custom) I'm not D.D.crow!
-RegEff.scref(24508238,0,DelightswornScrefTable[24508238][0])		--D.D. 크로우
-RegEff.scref(97268402,0,DelightswornScrefTable[97268402][0])		--이펙트 뵐러
-RegEff.scref(18452762,0,DelightswornScrefTable[18452762][0])		--(custom) 이펙트 세일러
---RegEff.scref(18452813,0,nil)									--이펙트 스퀘어러
-RegEff.scref(112603120,0,DelightswornScrefTable[112603120][0])	--(custom) 와타시베 크리스
-RegEff.scref(112603120,1,DelightswornScrefTable[112603120][1])	--(custom) 와타시베 크리스
-if YGOPRO_VERSION~="Percy/EDO" then
-	--temp
-	RegEff.scref(10045474,0,function(e,c)						--무한포영
+	elseif code==112603120 and mt.eff_ct[c][0]==e then
 		local filter=function(c,tp)
 			return c:IsFaceup()
-				and ((aux.disfilter1(c) and c:IsControler(1-tp) and c:IsLocation(LOCATION_MZONE))
+				and ((not c:IsDisabled() and c:IsType(TYPE_EFFECT) and not c:IsCode(code)
+					and c:IsControler(1-tp)	and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED))
 					or c.delightsworn)
 		end
 		e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-			if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and filter(chkc,tp) end
-			if chk==0 then return Duel.IsExistingTarget(filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,tp) end
+			if chkc then return chkc:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED) and filter(chkc,tp) end
+			if chk==0 then
+				return Duel.IsExistingTarget(filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,1,nil,tp)
+			end
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-			local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,tp)
+			local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,1,1,nil,tp)
+			Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 		end)
-	end)
+	elseif code==112603120 and mt.eff_ct[c][1]==e then
+		local filter=function(c,tp)
+			return c:IsFaceup()
+				and ((not c:IsDisabled() and not c:IsType(TYPE_NORMAL) and not c:IsCode(code)
+					and c:IsControler(1-tp)	and c:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED))
+					or c.delightsworn)
+		end
+		e:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+			if chkc then return chkc:IsLocation(LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED) and filter(chkc,tp) end
+			if chk==0 then
+				return Duel.IsExistingTarget(filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,1,nil,tp)
+			end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+			local g=Duel.SelectTarget(tp,filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,1,1,nil,tp)
+			Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
+		end)
+	end
 end
 
 --Time Capsule utilities
