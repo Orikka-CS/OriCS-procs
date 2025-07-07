@@ -123,7 +123,7 @@ function Card.RegisterEffect(c,e,forced,...)
 					local tres=top(e,tp)
 					Auxiliary.CheckDisSumAble=true
 					if not tres
-						or (con and not con(e,tp,eg,ep,ev,re,r,rp))
+						--or (con and not con(e,tp,eg,ep,ev,re,r,rp))
 						or (cost and not cost(e,tp,eg,ep,ev,re,r,rp,0))
 						or (tg and not tg(e,tp,eg,ep,ev,re,r,rp,0)) then
 						coinbeat_misfire=true
@@ -212,7 +212,7 @@ function Duel.RegisterEffect(e,...)
 					local tres=top(e,tp)
 					Auxiliary.CheckDisSumAble=true
 					if not tres
-						or (con and not con(e,tp,eg,ep,ev,re,r,rp))
+						--or (con and not con(e,tp,eg,ep,ev,re,r,rp))
 						or (cost and not cost(e,tp,eg,ep,ev,re,r,rp,0))
 						or (tg and not tg(e,tp,eg,ep,ev,re,r,rp,0)) then
 						coinbeat_misfire=true
