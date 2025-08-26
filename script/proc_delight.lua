@@ -266,7 +266,7 @@ function Auxiliary.DelightCondition(f,min,max,gf,mgf)
 				return true
 			end
 			local tp=c:GetControler()
-			if not dc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_DELIGHT,tp,false,false) then
+			if not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_DELIGHT,tp,false,false) then
 				return false
 			end
 			local mg=Auxiliary.GetDelightMaterials(tp,f,c)
