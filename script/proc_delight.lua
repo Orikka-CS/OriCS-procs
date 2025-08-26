@@ -258,7 +258,6 @@ function Auxiliary.DelCheckGoal(sg,e,tp,dc,gf)
 	return (not gf or gf(sg))
 		and sg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)<=Duel.GetTurnCount()
 		and Duel.GetLocationCountFromEx(tp,tp,sg,dc)>0
-		and dc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_DELIGHT,tp,false,false)
 end
 function Auxiliary.DelightCondition(f,min,max,gf,mgf)
 	return
@@ -267,6 +266,9 @@ function Auxiliary.DelightCondition(f,min,max,gf,mgf)
 				return true
 			end
 			local tp=c:GetControler()
+			if not dc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_DELIGHT,tp,false,false) then
+				return false
+			end
 			local mg=Auxiliary.GetDelightMaterials(tp,f,c)
 			local fg=Auxiliary.GetMustMaterialGroup(tp,EFFECT_MUST_BE_DEL_MATERIAL)
 			if fg:IsExists(Auxiliary.MustMaterialCounterFilter,1,nil,mg) then
