@@ -572,6 +572,9 @@ function Spinel.PenumbraBeforeOperation()
 		cc=ce:GetHandler()
 	end
 	if not cc or not cc:IsLocation(0x7e) then
+		if not cp then
+			cp=0
+		end
 		cc=Duel.GetFirstMatchingCard(aux.TRUE,cp,LOCATION_EXTRA,0,nil)
 		if not cc then
 			cc=Duel.GetFirstMatchingCard(aux.TRUE,cp,LOCATION_REMOVED,0,nil)
