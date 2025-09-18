@@ -185,6 +185,29 @@ RegEff.scref(CARD_CYCLONE_DICE,0,function(e,c)
 	e:SetOperation(operation)
 end)
 
+--노스페라투 & 뱀피릭
+function YuL.NosferatuDR(c,damage,recover)
+	local e99=MakeEff(c,"STf")
+	e99:SetCategory(CATEGORY_DAMAGE+CATEGORY_RECOVER)
+	e99:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e99:SetCode(EVENT_TO_GRAVE)
+	e99:SetTarget(
+		function(e,tp,eg,ep,ev,re,r,rp,chk)
+			if chk==0 then return true end
+			Duel.SetTargetPlayer(tp)
+			Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,damage)
+			Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,recover)
+		end)
+	e99:SetOperation(
+		function(e,tp,eg,ep,ev,re,r,rp)
+			local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+			Duel.Damage(p,damage,REASON_EFFECT,true)
+			Duel.Recover(p,recover,REASON_EFFECT,true)
+			Duel.RDComplete()
+		end)
+	c:RegisterEffect(e99)
+end
+
 --엑시즈 베일
 RegEff.scref(96457619,1,function(e,c)
 	e:SetTarget(function(e,c)
