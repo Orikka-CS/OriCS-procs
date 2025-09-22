@@ -117,8 +117,8 @@ function Auxiliary.GetOrderSequenceValues(c,oc,tp)
 	end
 	local eset={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_ORDER_MATERIAL)}
 	for _,te in ipairs(eset) do
-		local val=te:GetOperation()
-		local sv=val(te,tp,c,mg)
+		local val=te:GetValue()
+		local sv=val(te,tp,c,oc)
 		if sv then
 			if type(sv)=="number" then
 				table.insert(values,sv)
