@@ -101,31 +101,74 @@ function Auxiliary.AddOrderProcedure(c,dir,gf,...)
 	c:RegisterEffect(e2)
 end
 function Auxiliary.OrderConditionFilter(c,ord)
-	return (c:GetSequence()<5 or c:IsHasEffect(EFFECT_EXTRA_ORDER_MATERIAL)) and c:IsCanBeOrderMaterial(ord)
+	return c:GetSequence()<5 and c:IsCanBeOrderMaterial(ord)
 end
 function Auxiliary.OrderCheckGoal(sg,tp,oc,gf,...)
 	local f={...}
+	local mg=Group.CreateGroup()
 	return Duel.GetLocationCountFromEx(tp,tp,sg,oc)>0 and (not gf or gf(sg))
-		and sg:IsExists(Auxiliary.OrderStartFilter,1,nil,sg,tp,table.unpack(f))
+		and sg:IsExists(Auxiliary.OrderLoopFilter,1,nil,c,sg,tp,0,mg,table.unpack(f))
+end
+function Auxiliary.GetOrderSequenceValues(c,oc,tp)
+	local values={}
+	local seq=c:GetSequence()
+	if seq<5 and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) then
+		table.insert(values,seq)
+	end
+	local eset={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_ORDER_MATERIAL)}
+	for _,te in ipairs(eset) do
+		local val=te:GetOperation()
+		local sv=val(te,tp,c,mg)
+		if sv then
+			if type(sv)=="number" then
+				table.insert(values,sv)
+			elseif type(sv)=="table" then
+				for _,v in ipairs(sv) do
+					table.insert(values,v)
+				end
+			end
+		end
+	end
+	return values
+end
+function Auxiliary.OrderPreFilter(c,mc,oc,tp)
+	local sv1=Auxiliary.GetOrderSequenceValues(c,oc,tp)
+	local sv2=Auxiliary.GetOrderSequenceValues(mc,oc,tp)
+	for _,v1 in ipairs(sv1) do
+		for _,v2 in ipairs(sv2) do
+			if v1==v2-1 then
+				return true
+			end
+		end
+	end
+	return false
+end
+function Auxiliary.OrderLoopFilter(c,oc,sg,tp,ct,mg,...)
+	local fs={...}
+	local f=fs[ct+1]
+	local res=(#mg==0 or mg:IsExists(Auxiliary.OrderPreFilter,1,nil,c,oc,tp))
+		and (not f or f(c,oc,SUMMON_TYPE_ORDER,tp))
+	ct=ct+1
+	mg:AddCard(c)
+	local sres=res and (ct==#fs or sg:IsExists(Auxiliary.OrderLoopFilter,1,mg,oc,sg,tp,ct,mg,table.unpack(fs)))
+	ct=ct-1
+	mg:RemoveCard(c)
+	return sres
 end
 function Auxiliary.OrderCheckFilter(c,sg,f,oc,tp)
 	return c and sg:IsContains(c) and (not f or f(c,oc,SUMMON_TYPE_ORDER,tp))
 end
-function Auxiliary.OrderStartFilter(c,sg,tp,...)
-	local f={...}
-	local seq=aux.GetColumn(c,tp)
-	if seq+#f>5 then
-		return false
-	end
-	for i=0,#f-1 do
-		local tc=Duel.GetFieldCard(tp,LOCATION_MZONE,seq+i)
-		local ec=(seq+i)&1>0 and Duel.GetFieldCard(tp,LOCATION_MZONE,(seq+i+9)/2)
-		if not (aux.OrderCheckFilter(tc,sg,f[i+1],c,tp)
-			or aux.OrderCheckFilter(ec,sg,f[i+1],c,tp)) then
-			return false
+function Auxiliary.GetExtraOrderMaterial(c,tp,mg)
+	local exg=Group.CreateGroup()
+	local eset={Duel.IsPlayerAffectedByEffect(tp,EFFECT_EXTRA_ORDER_MATERIAL)}
+	for _,te in ipairs(eset) do
+		local op=te:GetOperation()
+		local tg=op(te,tp,c,mg)
+		if tg then
+			exg:Merge(tg)
 		end
 	end
-	return true
+	return exg
 end
 function Auxiliary.OrderCondition(gf,...)
 	local f={...}
@@ -135,6 +178,8 @@ function Auxiliary.OrderCondition(gf,...)
 		if #f<2 then return false end
 		local tp=c:GetControler()
 		local mg=Duel.GetMatchingGroup(Auxiliary.OrderConditionFilter,tp,LOCATION_MZONE,0,nil,c)
+		local exg=Auxiliary.GetExtraOrderMaterial(c,tp,mg)
+		mg:Merge(exg)
 		local fg=Auxiliary.GetMustMaterialGroup(tp,EFFECT_MUST_BE_OMATERIAL)
 		if fg:IsExists(Auxiliary.MustMaterialCounterFilter,1,nil,mg) then return false end
 		Duel.SetSelectedCard(fg)
@@ -145,6 +190,8 @@ function Auxiliary.OrderTarget(gf,...)
 	local f={...}
 	return function(e,tp,eg,ep,ev,re,r,rp,chk,c)
 		local mg=Duel.GetMatchingGroup(Auxiliary.OrderConditionFilter,tp,LOCATION_MZONE,0,nil,c)
+		local exg=Auxiliary.GetExtraOrderMaterial(c,tp,mg)
+		mg:Merge(exg)
 		local fg=Auxiliary.GetMustMaterialGroup(tp,EFFECT_MUST_BE_OMATERIAL)
 		Duel.SetSelectedCard(fg)
 		Duel.Hint(HINT_SELECTMSG,tp,9901)
