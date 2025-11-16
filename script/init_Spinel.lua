@@ -554,6 +554,7 @@ local cgfct=Card.GetFirstCardTarget
 local cgctc=Card.GetCardTargetCount
 local cihct=Card.IsHasCardTarget
 
+local dgfmc=Duel.GetFirstMatchingCard
 local dsmc=Duel.SelectMatchingCard
 local dsrg=Duel.SelectReleaseGroup
 local dsrge=Duel.SelectReleaseGroupEx
@@ -575,18 +576,18 @@ function Spinel.PenumbraBeforeOperation()
 		if not cp then
 			cp=0
 		end
-		cc=Duel.GetFirstMatchingCard(aux.TRUE,cp,LOCATION_EXTRA,0,nil)
+		cc=dgfmc(aux.TRUE,cp,LOCATION_EXTRA,0,nil)
 		if not cc then
-			cc=Duel.GetFirstMatchingCard(aux.TRUE,cp,LOCATION_REMOVED,0,nil)
+			cc=dgfmc(aux.TRUE,cp,LOCATION_REMOVED,0,nil)
 		end
 		if not cc then
-			cc=Duel.GetFirstMatchingCard(aux.TRUE,cp,LOCATION_GRAVE,0,nil)
+			cc=dgfmc(aux.TRUE,cp,LOCATION_GRAVE,0,nil)
 		end
 		if not cc then
-			cc=Duel.GetFirstMatchingCard(aux.TRUE,cp,LOCATION_HAND,0,nil)
+			cc=dgfmc(aux.TRUE,cp,LOCATION_HAND,0,nil)
 		end
 		if not cc then
-			cc=Duel.GetFirstMatchingCard(aux.TRUE,cp,LOCATION_ONFIELD,0,nil)
+			cc=dgfmc(aux.TRUE,cp,LOCATION_ONFIELD,0,nil)
 		end
 	end
 	local fg=Duel.GetMatchingGroup(Card.IsFaceup,0,LOCATION_DECK,LOCATION_DECK,nil)
