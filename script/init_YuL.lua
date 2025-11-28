@@ -10,18 +10,19 @@ CARD_RAINBOW_FISH	=23771716	--레인보우 휘시
 CARD_FISH_N_KICKS	=32703716	--피쉬 앤 킥스
 CARD_FISH_N_BACKS	=21507589	--피쉬 앤 백스
 CARD_PESTILENCE		=62472614	--역병
-
 CARD_CYCLONE		=5318639	--싸이크론
 CARD_CYCLONE_GALAXY	=5133471	--갤럭시 싸이크론
 CARD_CYCLONE_COSMIC	=8267140	--코즈믹 싸이크론
 CARD_CYCLONE_DOUBLE	=75652080	--더블 싸이크론
 CARD_CYCLONE_DICE	=3493058	--주사위크론
+CARD_CYCLONE_DICE	=69176131	--스페이스 싸이크론
 CARD_TORNADO_DRAGON	=6983839	--토네이드래곤
 CW_CYCLONE			=99970971	--난수나비(카오틱윙)
 CW_CYCLONE_GALAXY	=99970972	--갤럭시 카오틱윙
 CW_CYCLONE_COSMIC	=99970973	--코즈믹 카오틱윙
 CW_CYCLONE_DOUBLE	=99970974	--더블 카오틱윙
 CW_CYCLONE_DICE		=99970975	--다이스 카오틱윙
+CW_CYCLONE_SPACE	=99971057	--스페이스 카오틱윙
 
 EFFECT_CHANGE_SUMMON_TYPE	=99970548
 EFFECT_ADD_SUMMON_TYPE		=99970549
@@ -182,6 +183,31 @@ RegEff.scref(CARD_CYCLONE_DICE,0,function(e,c)
 			Duel.Destroy(dg,REASON_EFFECT)
 		end
 	end
+	e:SetOperation(operation)
+end)
+
+RegEff.scref(CARD_CYCLONE_SPACE,0,function(e,c)
+	local filter = function(c)
+		return c:IsSpellTrap() and c:IsAbleToRemove()
+	end
+	local operation = function(e,tp,eg,ep,ev,re,r,rp)
+		local chaoticwing = Duel.IsPlayerAffectedByEffect(tp,CW_CYCLONE_SPACE)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DEATTACHFROM)
+		local sg=Duel.SelectMatchingCard(tp,Card.CheckRemoveOverlayCard,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,tp,1,REASON_EFFECT)
+		if #sg==0 then return end
+		Duel.HintSelection(sg)
+		sg:GetFirst():RemoveOverlayCard(tp,1,1,REASON_EFFECT)
+		local ct=0
+		if sg:GetFirst():IsRankAbove(2) then ct=math.floor(sg:GetFirst():GetRank()/2) end
+		if chaoticwing and ct>0 and Duel.SelectYesNo(tp,aux.Stringid(CW_CYCLONE_SPACE,2)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+			local g=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,ct,nil)
+			if #g>0 then
+				Duel.SendtoHand(g,nil,REASON_EFFECT)
+			end
+		end
+	end
+	e:SetTarget(target)
 	e:SetOperation(operation)
 end)
 
