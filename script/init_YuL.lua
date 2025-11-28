@@ -15,7 +15,7 @@ CARD_CYCLONE_GALAXY	=5133471	--갤럭시 싸이크론
 CARD_CYCLONE_COSMIC	=8267140	--코즈믹 싸이크론
 CARD_CYCLONE_DOUBLE	=75652080	--더블 싸이크론
 CARD_CYCLONE_DICE	=3493058	--주사위크론
-CARD_CYCLONE_DICE	=69176131	--스페이스 싸이크론
+CARD_CYCLONE_SPACE	=69176131	--스페이스 싸이크론
 CARD_TORNADO_DRAGON	=6983839	--토네이드래곤
 CW_CYCLONE			=99970971	--난수나비(카오틱윙)
 CW_CYCLONE_GALAXY	=99970972	--갤럭시 카오틱윙
@@ -1448,3 +1448,4 @@ function YuL.ColossusSummonCondition2(e,c)
 	end
 	return false
 end
+
