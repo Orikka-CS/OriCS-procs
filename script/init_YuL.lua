@@ -187,9 +187,6 @@ RegEff.scref(CARD_CYCLONE_DICE,0,function(e,c)
 end)
 
 RegEff.scref(CARD_CYCLONE_SPACE,0,function(e,c)
-	local filter = function(c)
-		return c:IsSpellTrap() and c:IsAbleToRemove()
-	end
 	local operation = function(e,tp,eg,ep,ev,re,r,rp)
 		local chaoticwing = Duel.IsPlayerAffectedByEffect(tp,CW_CYCLONE_SPACE)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DEATTACHFROM)
@@ -207,7 +204,6 @@ RegEff.scref(CARD_CYCLONE_SPACE,0,function(e,c)
 			end
 		end
 	end
-	e:SetTarget(target)
 	e:SetOperation(operation)
 end)
 
@@ -1448,4 +1444,3 @@ function YuL.ColossusSummonCondition2(e,c)
 	end
 	return false
 end
-
