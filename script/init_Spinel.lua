@@ -2,7 +2,7 @@ spinel={}
 Spinel=spinel
 
 --■■■■■■■■■■■■■■■■■■■■■■■■
---■스펠 스피드 조정
+--■스펠 스피드 조정■
 
 GlobalSpellSpeed=false
 GlobalSpellSpeedTable={}
@@ -74,7 +74,200 @@ function RegisterSpellSpeedCheck()
 end
 
 --■■■■■■■■■■■■■■■■■■■■■■■■
---■■ 이하 효과 엎는거 / 난 이런걸 짠 기억이 없는데 ㅋㅋ
+--■슈퍼 발동이었나 이게■
+
+UnlimitChain={}
+
+local dschlim=Duel.SetChainLimit
+function Duel.SetChainLimit(f)
+	dschlim(function(e,ep,tp)
+		for _,te in pairs(UnlimitChain) do
+			if e==te then
+				return true
+			end
+		end
+		return f(e,ep,tp)
+	end)
+end
+
+--■■■■■■■■■■■■■■■■■■■■■■■■
+--■페넘브라■
+
+local cgct=Card.GetCardTarget
+local cgfct=Card.GetFirstCardTarget
+local cgctc=Card.GetCardTargetCount
+local cihct=Card.IsHasCardTarget
+
+local dgfmc=Duel.GetFirstMatchingCard
+local dsmc=Duel.SelectMatchingCard
+local dsrg=Duel.SelectReleaseGroup
+local dsrge=Duel.SelectReleaseGroupEx
+local dstr=Duel.SelectTribute
+local dsta=Duel.SelectTarget
+local gfs=Group.FilterSelect
+local gs=Group.Select
+local gsu=Group.SelectUnselect
+local gswse=Group.SelectWithSumEqual
+local gswsg=Group.SelectWithSumGreater
+
+function Spinel.PenumbraBeforeOperation()
+	local ce,cp=Duel.GetChainInfo(0,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
+	local cc=nil
+	if ce then
+		cc=ce:GetHandler()
+	end
+	if not cc or not cc:IsLocation(0x7e) then
+		if not cp then
+			cp=0
+		end
+		cc=Duel.GetFirstMatchingCard(aux.TRUE,cp,LOCATION_EXTRA,0,nil)
+		if not cc then
+			cc=dgfmc(aux.TRUE,cp,LOCATION_REMOVED,0,nil)
+		end
+		if not cc then
+			cc=dgfmc(aux.TRUE,cp,LOCATION_GRAVE,0,nil)
+		end
+		if not cc then
+			cc=dgfmc(aux.TRUE,cp,LOCATION_HAND,0,nil)
+		end
+		if not cc then
+			cc=dgfmc(aux.TRUE,cp,LOCATION_ONFIELD,0,nil)
+		end
+	end
+	local fg=Duel.GetMatchingGroup(Card.IsFaceup,0,LOCATION_DECK,LOCATION_DECK,nil)
+	if cc then
+		for fc in aux.Next(fg) do
+			fc:RegisterFlagEffect(99000418,0,0,0)
+			cc:SetCardTarget(fc)
+		end
+	end
+	return cc,fg
+end
+function Spinel.PenumbraAfterOperation(cc,fg)
+	if cc then
+		for fc in aux.Next(fg) do
+			cc:CancelCardTarget(fc)
+			fc:ResetFlagEffect(99000418)
+		end
+	end
+end
+
+function Card.GetCardTarget(c)
+	local g=cgct(c)
+	local rg=g:Remove(Card.HasFlagEffect,nil,99000418)
+	return rg
+end
+function Card.GetFirstCardTarget(c)
+	local g=cgct(c)
+	local rg=g:Remove(Card.HasFlagEffect,nil,99000418)
+	if #rg==#g then
+		return cgfct(c)
+	else
+		return rg:GetFirst()
+	end
+end
+function Card.GetCardTargetCount(c)
+	local g=cgct(c)
+	local rg=g:Remove(Card.HasFlagEffect,nil,99000418)
+	return #rg
+end
+function Card.IsHasCardTarget(c,tc)
+	if tc:HasFlagEffect(99000418) then
+		return false
+	end
+	return cihct(c,tc)
+end
+
+function Duel.SelectMatchingCard(...)
+	local cc,fg=Spinel.PenumbraBeforeOperation()
+	local res=dsmc(...)
+	Spinel.PenumbraAfterOperation(cc,fg)
+	return res
+end
+function Duel.SelectReleaseGroup(...)
+	local cc,fg=Spinel.PenumbraBeforeOperation()
+	local res=dsrg(...)
+	Spinel.PenumbraAfterOperation(cc,fg)
+	return res
+end
+function Duel.SelectReleaseGroupEx(...)
+	local cc,fg=Spinel.PenumbraBeforeOperation()
+	local res=dsrge(...)
+	Spinel.PenumbraAfterOperation(cc,fg)
+	return res
+end
+function Duel.SelectTribute(...)
+	local cc,fg=Spinel.PenumbraBeforeOperation()
+	local res=dstr(...)
+	Spinel.PenumbraAfterOperation(cc,fg)
+	return res
+end
+function Duel.SelectTarget(...)
+	local cc,fg=Spinel.PenumbraBeforeOperation()
+	local res=dsta(...)
+	Spinel.PenumbraAfterOperation(cc,fg)
+	return res
+end
+function Group.FilterSelect(...)
+	local cc,fg=Spinel.PenumbraBeforeOperation()
+	local res=gfs(...)
+	Spinel.PenumbraAfterOperation(cc,fg)
+	return res
+end
+function Group.Select(...)
+	local cc,fg=Spinel.PenumbraBeforeOperation()
+	local res=gs(...)
+	Spinel.PenumbraAfterOperation(cc,fg)
+	return res
+end
+function Group.SelectUnselect(...)
+	local cc,fg=Spinel.PenumbraBeforeOperation()
+	local res=gsu(...)
+	Spinel.PenumbraAfterOperation(cc,fg)
+	return res
+end
+function Group.SelectWithSumEqual(...)
+	local cc,fg=Spinel.PenumbraBeforeOperation()
+	local res=gswse(...)
+	Spinel.PenumbraAfterOperation(cc,fg)
+	return res
+end
+function Group.SelectWithSumGreater(...)
+	local cc,fg=Spinel.PenumbraBeforeOperation()
+	local res=gswsg(...)
+	Spinel.PenumbraAfterOperation(cc,fg)
+	return res
+end
+
+--■■■■■■■■■■■■■■■■■■■■■■■■
+--■ 효과 덮어쓰기 ■
+
+--LP 변화
+local paylp=Duel.PayLPCost
+Duel.PayLPCost=function(tp,val)
+	if Duel.IsPlayerAffectedByEffect(tp,99000264) then
+		if paylp(tp,val)~=0 then
+			Duel.RaiseEvent(Group.CreateGroup(c),EVENT_CUSTOM+99000264,e,0,tp,tp,0)
+			Debug.Message("RaiseEvent fired4")
+			return 0
+		end
+	else
+		return paylp(tp,val)
+	end
+end
+local setlp=Duel.SetLP
+Duel.SetLP=function(tp,val)
+	if Duel.IsPlayerAffectedByEffect(tp,99000264) and Duel.GetLP(tp)~=val then
+		if setlp(tp,val)~=0 then
+			Duel.RaiseEvent(Group.CreateGroup(c),EVENT_CUSTOM+99000264,e,0,tp,tp,0)
+			Debug.Message("RaiseEvent fired4")
+			return 0
+		end
+	else
+		return setlp(tp,val)
+	end
+end
+
 local cregeff = {}
 
 --트라미드 마스터
@@ -168,7 +361,7 @@ for code,t in ipairs(cregeff) do
 end
 
 --■■■■■■■■■■■■■■■■■■■■■■■■
---■■	안쓰는데 혹시나 싶어서
+--■	안쓰는데 혹시나 싶어서 ■
 
 --■EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP
 spinel.delay=0x14000
@@ -245,20 +438,7 @@ function spinel.stypecon(t,con)
 end
 
 --■■■■■■■■■■■■■■■■■■■■■■■■
---■■	주석 라인 / 옛날 init 백업
-UnlimitChain={}
-
-local dschlim=Duel.SetChainLimit
-function Duel.SetChainLimit(f)
-	dschlim(function(e,ep,tp)
-		for _,te in pairs(UnlimitChain) do
-			if e==te then
-				return true
-			end
-		end
-		return f(e,ep,tp)
-	end)
-end
+--■	주석 라인 / 옛날 init 백업 ■
 
 --[[
 
@@ -548,151 +728,5 @@ function Duel.RegisterEffect(e,tp,forced,...)
 end
 
 --]]
-
-local cgct=Card.GetCardTarget
-local cgfct=Card.GetFirstCardTarget
-local cgctc=Card.GetCardTargetCount
-local cihct=Card.IsHasCardTarget
-
-local dgfmc=Duel.GetFirstMatchingCard
-local dsmc=Duel.SelectMatchingCard
-local dsrg=Duel.SelectReleaseGroup
-local dsrge=Duel.SelectReleaseGroupEx
-local dstr=Duel.SelectTribute
-local dsta=Duel.SelectTarget
-local gfs=Group.FilterSelect
-local gs=Group.Select
-local gsu=Group.SelectUnselect
-local gswse=Group.SelectWithSumEqual
-local gswsg=Group.SelectWithSumGreater
-
-function Spinel.PenumbraBeforeOperation()
-	local ce,cp=Duel.GetChainInfo(0,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
-	local cc=nil
-	if ce then
-		cc=ce:GetHandler()
-	end
-	if not cc or not cc:IsLocation(0x7e) then
-		if not cp then
-			cp=0
-		end
-		cc=dgfmc(aux.TRUE,cp,LOCATION_EXTRA,0,nil)
-		if not cc then
-			cc=dgfmc(aux.TRUE,cp,LOCATION_REMOVED,0,nil)
-		end
-		if not cc then
-			cc=dgfmc(aux.TRUE,cp,LOCATION_GRAVE,0,nil)
-		end
-		if not cc then
-			cc=dgfmc(aux.TRUE,cp,LOCATION_HAND,0,nil)
-		end
-		if not cc then
-			cc=dgfmc(aux.TRUE,cp,LOCATION_ONFIELD,0,nil)
-		end
-	end
-	local fg=Duel.GetMatchingGroup(Card.IsFaceup,0,LOCATION_DECK,LOCATION_DECK,nil)
-	if cc then
-		for fc in aux.Next(fg) do
-			fc:RegisterFlagEffect(99000418,0,0,0)
-			cc:SetCardTarget(fc)
-		end
-	end
-	return cc,fg
-end
-function Spinel.PenumbraAfterOperation(cc,fg)
-	if cc then
-		for fc in aux.Next(fg) do
-			cc:CancelCardTarget(fc)
-			fc:ResetFlagEffect(99000418)
-		end
-	end
-end
-
-function Card.GetCardTarget(c)
-	local g=cgct(c)
-	local rg=g:Remove(Card.HasFlagEffect,nil,99000418)
-	return rg
-end
-function Card.GetFirstCardTarget(c)
-	local g=cgct(c)
-	local rg=g:Remove(Card.HasFlagEffect,nil,99000418)
-	if #rg==#g then
-		return cgfct(c)
-	else
-		return rg:GetFirst()
-	end
-end
-function Card.GetCardTargetCount(c)
-	local g=cgct(c)
-	local rg=g:Remove(Card.HasFlagEffect,nil,99000418)
-	return #rg
-end
-function Card.IsHasCardTarget(c,tc)
-	if tc:HasFlagEffect(99000418) then
-		return false
-	end
-	return cihct(c,tc)
-end
-
-function Duel.SelectMatchingCard(...)
-	local cc,fg=Spinel.PenumbraBeforeOperation()
-	local res=dsmc(...)
-	Spinel.PenumbraAfterOperation(cc,fg)
-	return res
-end
-function Duel.SelectReleaseGroup(...)
-	local cc,fg=Spinel.PenumbraBeforeOperation()
-	local res=dsrg(...)
-	Spinel.PenumbraAfterOperation(cc,fg)
-	return res
-end
-function Duel.SelectReleaseGroupEx(...)
-	local cc,fg=Spinel.PenumbraBeforeOperation()
-	local res=dsrge(...)
-	Spinel.PenumbraAfterOperation(cc,fg)
-	return res
-end
-function Duel.SelectTribute(...)
-	local cc,fg=Spinel.PenumbraBeforeOperation()
-	local res=dstr(...)
-	Spinel.PenumbraAfterOperation(cc,fg)
-	return res
-end
-function Duel.SelectTarget(...)
-	local cc,fg=Spinel.PenumbraBeforeOperation()
-	local res=dsta(...)
-	Spinel.PenumbraAfterOperation(cc,fg)
-	return res
-end
-function Group.FilterSelect(...)
-	local cc,fg=Spinel.PenumbraBeforeOperation()
-	local res=gfs(...)
-	Spinel.PenumbraAfterOperation(cc,fg)
-	return res
-end
-function Group.Select(...)
-	local cc,fg=Spinel.PenumbraBeforeOperation()
-	local res=gs(...)
-	Spinel.PenumbraAfterOperation(cc,fg)
-	return res
-end
-function Group.SelectUnselect(...)
-	local cc,fg=Spinel.PenumbraBeforeOperation()
-	local res=gsu(...)
-	Spinel.PenumbraAfterOperation(cc,fg)
-	return res
-end
-function Group.SelectWithSumEqual(...)
-	local cc,fg=Spinel.PenumbraBeforeOperation()
-	local res=gswse(...)
-	Spinel.PenumbraAfterOperation(cc,fg)
-	return res
-end
-function Group.SelectWithSumGreater(...)
-	local cc,fg=Spinel.PenumbraBeforeOperation()
-	local res=gswsg(...)
-	Spinel.PenumbraAfterOperation(cc,fg)
-	return res
-end
 
 --■■■■■■■■■■■■■■■■■■■■■■■■
