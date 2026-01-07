@@ -120,7 +120,7 @@ function Spinel.PenumbraBeforeOperation()
 		if not cp then
 			cp=0
 		end
-		cc=Duel.GetFirstMatchingCard(aux.TRUE,cp,LOCATION_EXTRA,0,nil)
+		cc=dgfmc(aux.TRUE,cp,LOCATION_EXTRA,0,nil)
 		if not cc then
 			cc=dgfmc(aux.TRUE,cp,LOCATION_REMOVED,0,nil)
 		end
@@ -728,6 +728,5 @@ function Duel.RegisterEffect(e,tp,forced,...)
 end
 
 --]]
-
 
 --■■■■■■■■■■■■■■■■■■■■■■■■
