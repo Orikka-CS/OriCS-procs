@@ -99,7 +99,7 @@ end
 
 EFFECT_COINBEAT_EFFECT=18453923
 EFFECT_COINBEAT_MISFIRE=18453924
-
+--[[
 local cregeff=Card.RegisterEffect
 function Card.RegisterEffect(c,e,forced,...)
 	cregeff(c,e,forced,...)
@@ -188,7 +188,7 @@ function Card.RegisterEffect(c,e,forced,...)
 		end
 	end
 end
-
+]]--
 local dregeff=Duel.RegisterEffect
 function Duel.RegisterEffect(e,...)
 	dregeff(e,...)
